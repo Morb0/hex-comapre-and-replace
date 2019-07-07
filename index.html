@@ -1,0 +1,70 @@
+<html>
+	<head>
+		<title>HEX Compare & Replace</title>
+	</head>
+	<body style="text-align:center;padding:150px">
+		<h1>HEX Compare & Replace</h1>
+		<div>
+			<textarea id="text1" style="width:45%;height:150px;float:right;">
+71 7F 00 00 00 00 00 00 00 00 00 00 A0 CA 8A DF
+71 7F 00 00 06 00 00 00 08 00 00 00 31 00 00 00
+2E 00 00 00 30 00 00 00 00 00 00 00 00 00 A0 40
+00 00 C0 40 00 00 00 00 00 00 00 00 88 28 98 DF
+71 7F 00 00 88 C2 D4 DF 71 7F 00 00 00 00 00 00
+71 7F 00 00 00 00 00 00 00 00 00 00 49 00 00 00
+4F 00 00 00 53 00 00 00 00 00 00 00 00 00 00 00</textarea>
+			<textarea id="text2" style="width:45%;height:150px;float:left;">
+99 7F 00 00 00 00 00 00 00 00 00 00 00 00 01 00
+99 7F 00 00 00 00 00 00 00 00 00 00 42 00 00 00
+52 00 00 00 00 00 00 00 00 00 00 00 00 00 00 40
+00 00 A0 40 00 00 00 00 00 00 00 00 48 00 00 00
+52 00 00 00 44 00 00 00 00 00 00 00 00 00 00 00
+99 7F 00 00 00 00 00 00 00 00 00 00 1C 40 21 23
+86 99 7F 00 00 16 04 0B 53 00 00 00 00 00 96 42</textarea>
+		</div>
+		<br/>
+		<div>
+			<h3>Replace text:</h3>
+			<input id="replaceText" value="??"></input>
+		</div>
+		<button style="width: 40%;padding:10px;margin-top:30px;" id="submitBtn">Compare And Replace</button>
+		<div>
+			<h3 style="margin-top:30px;">Result:</h3>
+			<textarea id="result" style="width:100%;height:150px;"></textarea>
+		</div>
+	</body>
+	<script>
+		document.getElementById('submitBtn').onclick = function() {
+			var text1 = document.getElementById('text1').value;
+			var text2 = document.getElementById('text2').value;
+			var replaceText = document.getElementById('replaceText').value;
+			
+			var result = [];
+			
+			var text1Row = text1.split('\n');
+			var text2Row = text2.split('\n');
+			var maxRowsCount = text1Row.length < text2Row.length ? text2Row.length : text1Row.length;
+			
+			for (var i = 0; i < maxRowsCount; i++) {
+				var text1Bytes = text1Row[i].split(' ');
+				var text2Bytes = text2Row[i].split(' ');
+				var maxBytesCount = text1Bytes.length < text2Bytes.length ? text2Bytes.length : text1Bytes.length;
+				
+				result.push([]);
+				
+				for (var j = 0; j < maxBytesCount; j++) {
+					var text1Byte = text1Bytes[j];
+					var text2Byte = text2Bytes[j];
+					if (text1Byte === text2Byte) {
+						result[i].push(text1Byte);
+					} else {
+						result[i].push(replaceText);
+					}
+				}
+			}
+			
+			var resultStr = result.map(row => row.join(' ')).join('\n');
+			document.getElementById('result').value = resultStr;
+		};
+	</script>
+</html>
